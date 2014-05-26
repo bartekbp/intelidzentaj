@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ChoregrapheProject xmlns="http://www.aldebaran-robotics.com/schema/choregraphe/project.xsd" xar_version="3">
+    <Box name="root" id="-1" tooltip="Root box of Choregraphe&apos;s project. Highest level possible." x="0" y="0">
+        <bitmap>media/images/box/root.png</bitmap>
+        <script language="4">
+            <content>
+                <![CDATA[]]>
+</content>
+        </script>
+        <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+        <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+        <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+        <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+        <Timeline enable="0">
+            <BehaviorLayer name="behavior_layer1">
+                <BehaviorKeyframe name="keyframe1" index="1">
+                    <Diagram>
+                        <Box name="Script" id="1" tooltip="This box is empty and should be used to create any box script you would like.&#x0A;&#x0A;To edit its script, double-click on it." x="247" y="151">
+                            <bitmap>media/images/box/box-script.png</bitmap>
+                            <script language="4">
+                                <content>
+                                    <![CDATA[
+
+class MyClass(GeneratedClass):
+    def __init__(self):
+        GeneratedClass.__init__(self)
+        path = ALFrameManager.getBehaviorPath(self.behaviorId)
+        self.example_img = open(path+"/face.jpeg", "rb").read()
+
+    def onLoad(self):
+        pass
+
+    def onUnload(self):
+        pass
+        
+    def onInput_onStart(self):
+        self.address = self.getParameter("serverAddress")
+        self.logger.debug("address: " + str(self.address))
+        image = self.getCameraImage()
+        person = self.recognize_person(self.example_img)
+        self.say_person(person)
+        
+    def getCameraImage(self):
+        self.logger.info("getting camera image")
+#        photoProxy = ALProxy("ALPhotoCapture")
+#        self.logger.info("resoultion: " + str(photoProxy.getResolution()))
+        return "tests"
+
+    def recognize_person(self, image):
+        try:
+            import personRecognizerProxy
+        except:
+            import sys
+            sys.path.append(ALFrameManager.getBehaviorPath(self.behaviorId))
+            import personRecognizerProxy
+
+        person_recognizer = personRecognizerProxy.PersonRecognizerProxy(self.address)
+        return person_recognizer.recognize_person(image)
+        
+    def say_person(self, person):
+        ttsProxy = ALProxy("ALTextToSpeech")
+        ttsProxy.say(person)
+        self.logger.info("recognized person: " + str(person))
+    
+    def onInput_onStop(self):
+        self.onUnload()]]>
+</content>
+                            </script>
+                            <Input name="onLoad" type="1" type_size="1" nature="0" inner="1" tooltip="Signal sent when diagram is loaded." id="1" />
+                            <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
+                            <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
+                            <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
+                            <Parameter name="serverAddress" inherits_from_parent="1" content_type="3" value="http://localhost:8080" default_value="http://localhost:8080" custom_choice="0" tooltip="" id="5" />
+                        </Box>
+                        <Link inputowner="1" indexofinput="2" outputowner="0" indexofoutput="2" />
+                        <Link inputowner="0" indexofinput="4" outputowner="1" indexofoutput="4" />
+                    </Diagram>
+                </BehaviorKeyframe>
+            </BehaviorLayer>
+        </Timeline>
+    </Box>
+</ChoregrapheProject>
