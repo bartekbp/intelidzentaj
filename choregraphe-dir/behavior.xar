@@ -37,14 +37,16 @@ class MyClass(GeneratedClass):
         self.address = self.getParameter("serverAddress")
         self.logger.debug("address: " + str(self.address))
         image = self.getCameraImage()
-        person = self.recognize_person(self.example_img)
+        person = self.recognize_person(image)
         self.say_person(person)
         
     def getCameraImage(self):
         self.logger.info("getting camera image")
-#        photoProxy = ALProxy("ALPhotoCapture")
-#        self.logger.info("resoultion: " + str(photoProxy.getResolution()))
-        return "tests"
+        photoProxy = ALProxy("ALPhotoCapture")
+        photoProxy.setResolution(2)
+        photoProxy.setPictureFormat("jpg")
+        photoProxy.takePictures(1, "/tmp", "image.jpg")
+        return open("/tmp/image.jpg", "rb").read()
 
     def recognize_person(self, image):
         try:
@@ -70,7 +72,7 @@ class MyClass(GeneratedClass):
                             <Input name="onStart" type="1" type_size="1" nature="2" inner="0" tooltip="Box behavior starts when a signal is received on this input." id="2" />
                             <Input name="onStop" type="1" type_size="1" nature="3" inner="0" tooltip="Box behavior stops when a signal is received on this input." id="3" />
                             <Output name="onStopped" type="1" type_size="1" nature="1" inner="0" tooltip="Signal sent when box behavior is finished." id="4" />
-                            <Parameter name="serverAddress" inherits_from_parent="1" content_type="3" value="http://localhost:8080" default_value="http://localhost:8080" custom_choice="0" tooltip="" id="5" />
+                            <Parameter name="serverAddress" inherits_from_parent="1" content_type="3" value="http://169.254.233.106:8081" default_value="http://localhost:8080" custom_choice="0" tooltip="" id="5" />
                         </Box>
                         <Link inputowner="1" indexofinput="2" outputowner="0" indexofoutput="2" />
                         <Link inputowner="0" indexofinput="4" outputowner="1" indexofoutput="4" />
