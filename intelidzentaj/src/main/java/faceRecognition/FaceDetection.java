@@ -17,10 +17,10 @@ public class FaceDetection {
 	// private static String fileToRecognize = "dataf/b14.JPG";
 
 	private static final int SCALE = 2;
-    private String recognizedPeopleFile;
+    private String recognizedPeopleFilePath;
 
     public FaceDetection(String recognizedPeopleFile) {
-        this.recognizedPeopleFile = recognizedPeopleFile;
+        this.recognizedPeopleFilePath = recognizedPeopleFile;
     }
 
 
@@ -84,18 +84,10 @@ public class FaceDetection {
 
 			FaceRecognition fr = new FaceRecognition();
 			String output = fr.faceRecognize(im);
-			long epoch = System.currentTimeMillis()/1000;
+//			long epoch = System.currentTimeMillis()/1000;
 //			String imagename = "recognized/face"+epoch+".jpg";
             if(output != null){
-                File recognized = new File(this.recognizedPeopleFile);
-                File recognizedFile = new File(recognizedFaceFilePath);
-                BufferedWriter recognizedPeopleFileWriter = new BufferedWriter(new FileWriter(recognized, true));
-                recognizedPeopleFileWriter.write(recognizedFile.getName());
-                recognizedPeopleFileWriter.write(" = ");
-                recognizedPeopleFileWriter.write(output);
-                recognizedPeopleFileWriter.write("\n");
-                recognizedPeopleFileWriter.flush();
-                recognizedPeopleFileWriter.close();
+                logRecognizedPerson(recognizedFaceFilePath, output);
             }
 
 			cvSaveImage(recognizedFaceFilePath, im);
@@ -110,5 +102,17 @@ public class FaceDetection {
 		}
 
 	}
+
+    protected void logRecognizedPerson(String recognizedFaceFilePath, String output) throws IOException {
+        File recognizedPeopleFile = new File(this.recognizedPeopleFilePath);
+        File recognizedFaceFile = new File(recognizedFaceFilePath);
+        BufferedWriter recognizedPeopleFileWriter = new BufferedWriter(new FileWriter(recognizedPeopleFile, true));
+        recognizedPeopleFileWriter.write(recognizedFaceFile.getName());
+        recognizedPeopleFileWriter.write(" = ");
+        recognizedPeopleFileWriter.write(output);
+        recognizedPeopleFileWriter.write("\n");
+        recognizedPeopleFileWriter.flush();
+        recognizedPeopleFileWriter.close();
+    }
 
 }

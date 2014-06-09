@@ -37,8 +37,6 @@ public class ShowFilesHandler extends AbstractHandler{
             }
 
             response.getWriter().print("<!DOCTYPE html>\n<table border=\"1\"><tr><th>input file</th><th>detected face</th><th>recognized person</th></tr>");
-            Map<String, String> recoFiles = new HashMap<>();
-            List<String> inFiles = new ArrayList<>();
             for(File imageFile: filesDir.listFiles()){
                 if(imageFile.getName().endsWith(PostImageServer.IN_SUFFIX)){
                     String name = imageFile.getName().replace(PostImageServer.IN_SUFFIX, "");
