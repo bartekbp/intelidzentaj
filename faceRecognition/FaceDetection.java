@@ -1,5 +1,8 @@
 package faceRecognition;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
+
 import com.googlecode.javacv.cpp.opencv_core.IplImage;
 import static com.googlecode.javacv.cpp.opencv_core.*;
 import static com.googlecode.javacv.cpp.opencv_imgproc.*;
@@ -50,6 +53,9 @@ public class FaceDetection {
 		cvClearMemStorage(storage);
 
 		int total = faces.total();
+		if(total > 1){
+			return "Found more than one face";
+		}
 		System.out.println("Found " + total + " face(s)");
 		try {
 			CvRect rc = new CvRect(cvGetSeqElem(faces, 0));
@@ -69,7 +75,9 @@ public class FaceDetection {
 
 			FaceRecognition fr = new FaceRecognition();
 			String output = fr.faceRecognize(im);
-
+			long epoch = System.currentTimeMillis()/1000;
+			String imagename = "recognized/face"+epoch+".jpg";
+			cvSaveImage(imagename, im);
 			// wyswietl twarz na ekran
 			// final CanvasFrame canvas = new CanvasFrame(output, 1);
 			// canvas.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
